@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import Header from "../Header";
 import { emailList } from "./Order";
+import Carousel from "react-carousel-minimal/dist/components/Carousel";
 
 function Home() {
   const [email, setEmail] = useState("");
@@ -20,21 +21,38 @@ function Home() {
     }
   };
 
+  const data = [
+    {
+      image:
+        "https://www.themealdb.com/images/media/meals/wxywrq1468235067.jpg",
+      caption: `
+                  Apple Frangipan Tart`,
+    },
+    {
+      image:
+        "https://www.themealdb.com/images/media/meals/xqrwyr1511133646.jpg",
+      caption: "Salted Caramel Cheescake",
+    },
+    {
+      image:
+        "https://www.themealdb.com/images/media/meals/qpqtuu1511386216.jpg",
+      caption: "Key Lime Pie",
+    },
+  ];
+
   return (
     <MainDiv>
       <Header />
       <ContainerDiv>
         <BigBox>
-          <ArBtn>
-            <Arrow viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15 19l-7-7 7-7"></path>
-            </Arrow>
-          </ArBtn>
-          <ArBtn>
-            <Arrow viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 5l7 7-7 7"></path>
-            </Arrow>
-          </ArBtn>
+          <Carousel
+            data={data}
+            width="850px"
+            height="350px"
+            automatic={true}
+            time={2000}
+            dots={true}
+          />
         </BigBox>
         <SmallBox>
           <LargeTxt>ORDER FLOW BOX</LargeTxt>
@@ -62,7 +80,7 @@ function Home() {
 
 export default Home;
 
-export let emailNumb;
+export let emailNumb = "";
 
 const MainDiv = styled.div`
   display: flex;
@@ -116,8 +134,6 @@ const Box = styled.div`
 const BigBox = styled(Box)`
   margin-top: 30px;
   width: 850px;
-  flex-direction: row;
-  justify-content: space-between;
 `;
 
 const SmallBox = styled(Box)`

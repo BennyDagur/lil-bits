@@ -1,23 +1,31 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Header() {
+  let location = useLocation();
+  let pathname = location.pathname;
+
+  const style = {
+    [pathname]: {
+      color: "red",
+    },
+  };
   return (
     <ContainerDiv>
       <Link to={"/"}>
         <Logo src="http://ih1.redbubble.net/image.181146356.8650/sticker,375x360.u1.png" />
       </Link>
       <Link to={"/dish"}>
-        <TopMenu>Dish</TopMenu>
+        <TopMenu style={style["/dish"]}>Dish</TopMenu>
       </Link>
       <Link to={"/drinks"}>
-        <TopMenu>Drinks</TopMenu>
+        <TopMenu style={style["/drinks"]}>Drinks</TopMenu>
       </Link>
       <Link to={"/order"}>
-        <TopMenu>Order</TopMenu>
+        <TopMenu style={style["/order"]}>Order</TopMenu>
       </Link>
       <Link to={"/receipt"}>
-        <TopMenu>Receipt</TopMenu>
+        <TopMenu style={style["/receipt"]}>Receipt</TopMenu>
       </Link>
     </ContainerDiv>
   );

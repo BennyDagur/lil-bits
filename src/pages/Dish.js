@@ -25,7 +25,6 @@ function Dish() {
 
   useEffect(() => {
     if (Object.values(emailNumb).length != 0) {
-      console.log(emailList);
       setPicture(emailNumb["dishList"]);
     } else {
       image();
@@ -76,7 +75,7 @@ function Dish() {
 export default Dish;
 
 export let dishPrice;
-export let dishList;
+export let dishList = {};
 
 const MainDiv = styled.div`
   display: flex;

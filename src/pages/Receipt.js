@@ -5,7 +5,7 @@ import { dishPrice, dishList } from "./Dish";
 import { drinkArray } from "./Drinks";
 import { receiptCount } from "./Order";
 
-function Home() {
+function Receipt() {
   console.log(receiptCount);
 
   const sumWithInitial = drinkArray.reduce(
@@ -46,7 +46,7 @@ function Home() {
   );
 }
 
-export default Home;
+export default Receipt;
 
 const MainDiv = styled.div`
   display: flex;
