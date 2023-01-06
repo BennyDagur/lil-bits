@@ -1,10 +1,14 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Header from "../Header";
-import { useState } from "react";
+import DateTimePicker from "react-datetime-picker";
+import { useState, useEffect } from "react";
 import { dishList } from "./Dish";
+import { emailGrab, emailNumb } from "./Home";
 
 function Order() {
+  const history = useHistory();
+
   const [count, setCount] = useState(1);
 
   const handleClick = (i) => {
@@ -22,21 +26,83 @@ function Order() {
 
   const savedEmail = () => {
     if (/\S+@\S+.\S+/.test(email)) {
-      emailList.push({ [email]: { dishList } });
-      localStorage.setItem("email", JSON.stringify(emailList));
-      console.log(emailList);
-    } else console.log("Tis not working");
+      for (let i = 0; i < emailList.length; i++) {
+        if (email in emailList[i]) {
+          emailList[i] = { [email]: { dishList, email: email } };
+          displayEmail = email;
+          alert("Email Updated");
+          localStorage.setItem("Emails", JSON.stringify(emailList));
+          console.log(emailList);
+          return;
+        }
+      }
+      emailList.push({ [email]: { dishList, email: email } });
+      displayEmail = email;
+      alert("Email Submitted");
+      localStorage.setItem("Emails", JSON.stringify(emailList));
+    } else {
+      alert("Invalid Email Entered");
+    }
   };
+
+  const [value, valueChange] = useState(new Date());
+
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  };
+
+  const toReceipt = () => {
+    if (
+      value.getDay() !== 0 &&
+      value.getDay() !== 6 &&
+      value.getHours() >= 16 &&
+      value.getHours() < 23
+    ) {
+      receiptCount = count;
+      timeExport = value.toLocaleDateString("en-gb", options).toString();
+      history.push("/receipt");
+    } else return alert("Not a valid date");
+  };
+
+  useEffect(() => {
+    if (Object.values(emailGrab).length !== 0) {
+      console.log(emailGrab);
+      for (let i = 0; i < emailList.length; i++) {
+        if (emailGrab === emailList[i]) {
+          emailNumb["dishList"] = dishList;
+          emailList[i] = emailGrab;
+          displayEmail = emailNumb.email;
+          localStorage.setItem("Emails", JSON.stringify(emailList));
+
+          return;
+        }
+      }
+    }
+    displayEmail = "";
+  }, []);
 
   return (
     <MainDiv>
       <Header />
       <ContainerDiv>
         <Box>
-          <ContainerDiv>
-            <p>Yes</p>
-            <SmallBox></SmallBox>
-          </ContainerDiv>
+          <ToTop>
+            <TimeTxt>Pick time for pickup</TimeTxt>
+            <DateTimePicker
+              onChange={valueChange}
+              value={value}
+              minDate={new Date()}
+              locale="en-gb"
+              disableClock="true"
+              clearIcon={null}
+              calendarIcon={null}
+            />
+          </ToTop>
           <ContainerDiv>
             <CostTxt>Number of people</CostTxt>
             <CountContainer>
@@ -55,11 +121,7 @@ function Order() {
             <EmailLabel>Input Email Here</EmailLabel>
             <EmailInput onChange={setChange}></EmailInput>
             <BoxButton onClick={() => savedEmail()}>Save Email</BoxButton>
-            <BtnLnk to={"/receipt"}>
-              <BoxButton onClick={() => (receiptCount = count)}>
-                Receipt
-              </BoxButton>
-            </BtnLnk>
+            <BtnLnk onClick={() => toReceipt()}>Receipt</BtnLnk>
           </ContainerDiv>
         </Box>
       </ContainerDiv>
@@ -72,6 +134,8 @@ export default Order;
 export let receiptCount;
 
 export let emailList = JSON.parse(localStorage.getItem("email") || "[]");
+export let timeExport = " ";
+export let displayEmail = " ";
 
 const MainDiv = styled.div`
   display: flex;
@@ -85,6 +149,18 @@ const ContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+const TimeTxt = styled.h1`
+  margin-top: 10px;
+  font-size: 30px;
+`;
+
+const ToTop = styled(ContainerDiv)`
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  font-size: 30px;
 `;
 
 const BoxButton = styled.button`
@@ -112,13 +188,6 @@ const Box = styled.div`
   background-color: white;
 `;
 
-const SmallBox = styled.div`
-  align-self: center;
-  height: 250px;
-  width: 300px;
-  background-color: black;
-`;
-
 const ArBtn = styled.button`
   border: none;
   background-color: transparent;
@@ -136,7 +205,7 @@ const Arrow = styled.svg`
   cursor: pointer;
 `;
 
-const BtnLnk = styled(Link)`
+const BtnLnk = styled(BoxButton)`
   align-self: end;
   margin-right: 20px;
 `;

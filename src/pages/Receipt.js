@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../Header";
 import { dishPrice, dishList } from "./Dish";
 import { drinkArray } from "./Drinks";
-import { receiptCount } from "./Order";
+import { receiptCount, timeExport, displayEmail } from "./Order";
 
 function Receipt() {
   console.log(receiptCount);
@@ -27,12 +27,14 @@ function Receipt() {
         </HomeLink>
         <Box>
           <RcpTxt>RECEIPT</RcpTxt>
+          <ItmTxt>{displayEmail}</ItmTxt>
+          <ItmTxt>Pickup time Is {timeExport}</ItmTxt>
           <ItmTxt>
             {receiptCount} {dishList.strMeal} {overallDishPrice}kr
           </ItmTxt>
           {drinkArray ? (
             drinkArray.map((item) => (
-              <ItmTxt>
+              <ItmTxt key={item.id}>
                 {item.n} {item.c}kr
               </ItmTxt>
             ))

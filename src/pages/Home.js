@@ -15,8 +15,10 @@ function Home() {
   const checkEmail = () => {
     for (let i = 0; i < emailList.length; i++) {
       if (email in emailList[i]) {
-        emailNumb = emailList[i][email];
-        console.log(emailList[i][email]);
+        emailGrab = emailList[i];
+        emailNumb = emailGrab[email];
+        setEmail("Email found");
+        console.log(emailGrab[email]);
       }
     }
   };
@@ -68,11 +70,11 @@ function Home() {
           <EmailInput onChange={checkChange}></EmailInput>
           <LButton onClick={() => checkEmail()}>FIND</LButton>
         </Box>
-        <Box>
-          <ClearButton onClick={() => localStorage.clear}>
-            Clear all Emails
-          </ClearButton>
-        </Box>
+        <ImageBox
+          style={{
+            backgroundImage: `url(https://images.punkapi.com/v2/24.png)`,
+          }}
+        ></ImageBox>
       </ContainerDiv>
     </MainDiv>
   );
@@ -81,6 +83,8 @@ function Home() {
 export default Home;
 
 export let emailNumb = "";
+
+export let emailGrab = "";
 
 const MainDiv = styled.div`
   display: flex;
@@ -112,12 +116,6 @@ const LButton = styled(BoxButton)`
   align-self: end;
 `;
 
-const ClearButton = styled(BoxButton)`
-  margin-top: auto;
-  margin-bottom: auto;
-  align-self: center;
-`;
-
 const Box = styled.div`
   display: flex;
   flex-direction: column;
@@ -131,6 +129,22 @@ const Box = styled.div`
   background-color: white;
 `;
 
+const ImageBox = styled.img`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 350px;
+  width: 600px;
+  border: black solid;
+  background-color: white;
+  background-size: contain;
+  background-repeat: space;
+  background-position: center;
+`;
+
 const BigBox = styled(Box)`
   margin-top: 30px;
   width: 850px;
@@ -141,17 +155,6 @@ const SmallBox = styled(Box)`
   width: 350px;
   justify-content: space-between;
   align-items: center;
-`;
-
-const Arrow = styled.svg`
-  height: 125px;
-  cursor: pointer;
-`;
-
-const ArBtn = styled.button`
-  border: none;
-  background-color: transparent;
-  padding: 0px;
 `;
 
 const LargeTxt = styled.h1`

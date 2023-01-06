@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Header from "../Header";
 import { useEffect, useState } from "react";
-import { emailList } from "./Order";
 import { emailNumb } from "./Home";
 
 function Dish() {
@@ -24,7 +23,7 @@ function Dish() {
   };
 
   useEffect(() => {
-    if (Object.values(emailNumb).length != 0) {
+    if (Object.values(emailNumb).length !== 0) {
       setPicture(emailNumb["dishList"]);
     } else {
       image();
