@@ -86,7 +86,7 @@ const BoxButton = styled.button`
 const Box = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 40px;
+  margin-top: 20px;
   margin-left: 40px;
   margin-right: 40px;
   min-height: 600px;
@@ -98,11 +98,11 @@ const Box = styled.div`
 const RcpTxt = styled.p`
   margin-left: 10px;
   color: red;
-  font-size: 30px;
+  font-size: 36px;
   font-weight: 500;
 `;
 
 const ItmTxt = styled(RcpTxt)`
-  font-size: 20px;
+  font-size: 24px;
   font-weight: normal;
 `;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Header from "../Header";
 import Carousel from "react-carousel-minimal/dist/components/Carousel";
 import { useHistory } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 let emailList = JSON.parse(localStorage.getItem("email") || "[]");
 
@@ -16,6 +16,11 @@ function Home() {
 
   const [email, setEmail] = useState("");
 
+  useEffect(() => {
+    emailNumb = "";
+    emailGrab = "";
+  }, []);
+
   const checkChange = (change) => {
     setEmail(change.target.value);
   };
@@ -25,8 +30,13 @@ function Home() {
       if (email in emailList[i]) {
         emailGrab = emailList[i];
         emailNumb = emailGrab[email];
-        setEmail("Email found");
         console.log(emailGrab[email]);
+        history.push({
+          pathname: "/dish",
+
+          emailNmb: emailNumb,
+          emailGrab: emailGrab,
+        });
       }
     }
   };

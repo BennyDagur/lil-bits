@@ -167,8 +167,8 @@ const ContainerDiv = styled.div`
 const TimeTxt = styled.h1`
   color: red;
   margin-top: 10px;
-  margin-left: 10px;
-  font-size: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
   font-size: 32px;
 `;
 
