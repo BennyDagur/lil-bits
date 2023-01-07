@@ -1,11 +1,15 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import Header from "../Header";
+import { useHistory, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { emailNumb } from "./Home";
 
 function Dish() {
   const [picture, setPicture] = useState();
+
+  const history = useHistory();
+  const location = useLocation();
+
+  let dishPrice = 2500;
 
   const image = async () => {
     const res = await fetch("https://themealdb.com/api/json/v1/1/random.php");
@@ -15,22 +19,28 @@ function Dish() {
   };
 
   const dishClick = (dishImg, dishName, dishTxt) => {
-    dishList = {
-      strMealThumb: dishImg,
-      strMeal: dishName,
-      strInstructions: dishTxt,
-    };
+    history.push({
+      pathname: "/drinks",
+
+      dishList: {
+        strMealThumb: dishImg,
+        strMeal: dishName,
+        strInstructions: dishTxt,
+        dishPrice: dishPrice,
+      },
+
+      emailNmb: location.emailNmb,
+      emailGrab: location.emailGrab,
+    });
   };
 
   useEffect(() => {
-    if (Object.values(emailNumb).length !== 0) {
-      setPicture(emailNumb["dishList"]);
+    if (location.emailNmb.length !== 0) {
+      setPicture(location.emailNmb["dishList"]);
     } else {
       image();
     }
   }, []);
-
-  dishPrice = 2500;
 
   return (
     <MainDiv>
@@ -50,19 +60,18 @@ function Dish() {
         </StackDiv>
         <ColumnItems>
           <SmallBox>
-            <Link to={"/drinks"}>
-              <BoxButton
-                onClick={() =>
-                  dishClick(
-                    picture.strMealThumb,
-                    picture.strMeal,
-                    picture.strInstructions
-                  )
-                }
-              >
-                Next
-              </BoxButton>
-            </Link>
+            <LargeTxt>Click to purchase drink/s</LargeTxt>
+            <BoxButton
+              onClick={() =>
+                dishClick(
+                  picture.strMealThumb,
+                  picture.strMeal,
+                  picture.strInstructions
+                )
+              }
+            >
+              Next
+            </BoxButton>
           </SmallBox>
           <OutButton onClick={() => image()}>Generate new</OutButton>
         </ColumnItems>
@@ -72,9 +81,6 @@ function Dish() {
 }
 
 export default Dish;
-
-export let dishPrice;
-export let dishList = {};
 
 const MainDiv = styled.div`
   display: flex;
@@ -148,9 +154,16 @@ const BigBox = styled(Box)`
 `;
 
 const SmallBox = styled(Box)`
+  flex-direction: column;
   height: 300px;
   width: 350px;
-  align-items: end;
+  justify-content: space-between;
+`;
+
+const LargeTxt = styled.h1`
+  color: red;
+  margin-left: 20px;
+  margin-right: 20px;
 `;
 
 const RstrainImg = styled.img`

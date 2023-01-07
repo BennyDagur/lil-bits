@@ -1,13 +1,18 @@
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
 import Header from "../Header";
 import DateTimePicker from "react-datetime-picker";
+import { useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { dishList } from "./Dish";
-import { emailGrab, emailNumb } from "./Home";
+
+let emailList = JSON.parse(localStorage.getItem("email") || "[]");
+let displayEmail = " ";
+let receiptCount = "";
 
 function Order() {
   const history = useHistory();
+  const location = useLocation();
+
+  const dishList = location.dish;
 
   const [count, setCount] = useState(1);
 
@@ -64,19 +69,30 @@ function Order() {
       value.getHours() < 23
     ) {
       receiptCount = count;
-      timeExport = value.toLocaleDateString("en-gb", options).toString();
-      history.push("/receipt");
+      let timeExport = value.toLocaleDateString("en-gb", options).toString();
+      history.push({
+        pathname: "/receipt",
+
+        dish: location.dish,
+        emailNmb: location.emailNmb,
+        emailGrab: location.emailGrab,
+        drinks: location.drinks,
+        drinkID: location.drinkID,
+        time: timeExport,
+        receiptCount: receiptCount,
+        displayEmail: displayEmail,
+      });
     } else return alert("Not a valid date");
   };
 
   useEffect(() => {
-    if (Object.values(emailGrab).length !== 0) {
-      console.log(emailGrab);
+    if (Object.values(location.emailGrab).length !== 0) {
+      console.log(location.emailGrab);
       for (let i = 0; i < emailList.length; i++) {
-        if (emailGrab === emailList[i]) {
-          emailNumb["dishList"] = dishList;
-          emailList[i] = emailGrab;
-          displayEmail = emailNumb.email;
+        if (location.emailGrab === emailList[i]) {
+          location.emailNumb["dishList"] = dishList;
+          emailList[i] = location.emailGrab;
+          displayEmail = location.emailNumb.email;
           localStorage.setItem("Emails", JSON.stringify(emailList));
 
           return;
@@ -92,13 +108,16 @@ function Order() {
       <ContainerDiv>
         <Box>
           <ToTop>
-            <TimeTxt>Pick time for pickup</TimeTxt>
+            <TimeTxt>
+              Pick time for pickup between Monday to Friday and hours 16:00 to
+              23:00
+            </TimeTxt>
             <DateTimePicker
               onChange={valueChange}
               value={value}
               minDate={new Date()}
               locale="en-gb"
-              disableClock="true"
+              disableClock={true}
               clearIcon={null}
               calendarIcon={null}
             />
@@ -131,12 +150,6 @@ function Order() {
 
 export default Order;
 
-export let receiptCount;
-
-export let emailList = JSON.parse(localStorage.getItem("email") || "[]");
-export let timeExport = " ";
-export let displayEmail = " ";
-
 const MainDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -152,14 +165,19 @@ const ContainerDiv = styled.div`
 `;
 
 const TimeTxt = styled.h1`
+  color: red;
   margin-top: 10px;
+  margin-left: 10px;
   font-size: 30px;
+  font-size: 32px;
 `;
 
 const ToTop = styled(ContainerDiv)`
   justify-content: start;
   align-items: center;
   width: 100%;
+  height: 100%;
+  border-right: solid black 2px;
   font-size: 30px;
 `;
 
@@ -229,7 +247,7 @@ const EmailInput = styled.input`
 `;
 
 const CostTxt = styled.h1`
-  margin-left: 10px;
+  margin-left: 15px;
   margin-bottom: -40px;
   color: red;
 `;

@@ -1,19 +1,26 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import Header from "../Header";
-import { dishPrice, dishList } from "./Dish";
-import { drinkArray } from "./Drinks";
-import { receiptCount, timeExport, displayEmail } from "./Order";
+import { useHistory, useLocation } from "react-router-dom";
 
 function Receipt() {
-  console.log(receiptCount);
+  const history = useHistory();
+  const location = useLocation();
 
-  const sumWithInitial = drinkArray.reduce(
+  const handleClick = () =>
+    history.push({
+      pathname: "/",
+
+      dish: location.dish,
+      emailNmb: location.emailNmb,
+      emailGrab: location.emailGrab,
+    });
+
+  const sumWithInitial = location.drinks.reduce(
     (accumulator, currentValue) => accumulator + currentValue.c,
     0
   );
 
-  const overallDishPrice = dishPrice * receiptCount;
+  const overallDishPrice = location.dish.dishPrice * location.receiptCount;
 
   const overallPrice = overallDishPrice + sumWithInitial;
 
@@ -22,18 +29,16 @@ function Receipt() {
     <MainDiv>
       <Header />
       <ContainerDiv>
-        <HomeLink to={"/"}>
-          <BoxButton>BACK TO HOME</BoxButton>
-        </HomeLink>
+        <BoxButton onClick={() => handleClick()}>BACK TO HOME</BoxButton>
         <Box>
           <RcpTxt>RECEIPT</RcpTxt>
-          <ItmTxt>{displayEmail}</ItmTxt>
-          <ItmTxt>Pickup time Is {timeExport}</ItmTxt>
+          <ItmTxt>{location.displayEmail}</ItmTxt>
+          <ItmTxt>Pickup time Is {location.time}</ItmTxt>
           <ItmTxt>
-            {receiptCount} {dishList.strMeal} {overallDishPrice}kr
+            {location.receiptCount} {location.dish.strMeal} {overallDishPrice}kr
           </ItmTxt>
-          {drinkArray ? (
-            drinkArray.map((item) => (
+          {location.drinks ? (
+            location.drinks.map((item) => (
               <ItmTxt key={item.id}>
                 {item.n} {item.c}kr
               </ItmTxt>
@@ -75,9 +80,6 @@ const BoxButton = styled.button`
   background-color: red;
   margin-bottom: 25px;
   cursor: pointer;
-`;
-
-const HomeLink = styled(Link)`
   align-self: end;
 `;
 

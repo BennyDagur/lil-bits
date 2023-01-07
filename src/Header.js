@@ -12,21 +12,11 @@ function Header() {
   };
   return (
     <ContainerDiv>
-      <Link to={"/"}>
-        <Logo src="http://ih1.redbubble.net/image.181146356.8650/sticker,375x360.u1.png" />
-      </Link>
-      <Link to={"/dish"}>
-        <TopMenu style={style["/dish"]}>Dish</TopMenu>
-      </Link>
-      <Link to={"/drinks"}>
-        <TopMenu style={style["/drinks"]}>Drinks</TopMenu>
-      </Link>
-      <Link to={"/order"}>
-        <TopMenu style={style["/order"]}>Order</TopMenu>
-      </Link>
-      <Link to={"/receipt"}>
-        <TopMenu style={style["/receipt"]}>Receipt</TopMenu>
-      </Link>
+      <Logo src="http://ih1.redbubble.net/image.181146356.8650/sticker,375x360.u1.png" />
+      <TopMenu style={style["/dish"]}>Dish</TopMenu>
+      <TopMenu style={style["/drinks"]}>Drinks</TopMenu>
+      <TopMenu style={style["/order"]}>Order</TopMenu>
+      <TopMenu style={style["/receipt"]}>Receipt</TopMenu>
     </ContainerDiv>
   );
 }

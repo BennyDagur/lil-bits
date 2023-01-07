@@ -1,11 +1,19 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { useState } from "react";
 import Header from "../Header";
-import { emailList } from "./Order";
 import Carousel from "react-carousel-minimal/dist/components/Carousel";
+import { useHistory } from "react-router-dom";
+import { useState } from "react";
+
+let emailList = JSON.parse(localStorage.getItem("email") || "[]");
+
+let emailNumb = "";
+let emailGrab = "";
 
 function Home() {
+  const history = useHistory();
+
+  console.log(emailNumb);
+
   const [email, setEmail] = useState("");
 
   const checkChange = (change) => {
@@ -21,6 +29,15 @@ function Home() {
         console.log(emailGrab[email]);
       }
     }
+  };
+
+  const handleClick = () => {
+    history.push({
+      pathname: "/dish",
+
+      emailNmb: emailNumb,
+      emailGrab: emailGrab,
+    });
   };
 
   const data = [
@@ -57,10 +74,8 @@ function Home() {
           />
         </BigBox>
         <SmallBox>
-          <LargeTxt>ORDER FLOW BOX</LargeTxt>
-          <Link to={"/dish"}>
-            <BoxButton>ORDER</BoxButton>
-          </Link>
+          <LargeTxt>Click to purchase a dish</LargeTxt>
+          <BoxButton onClick={() => handleClick()}>ORDER</BoxButton>
         </SmallBox>
       </ContainerDiv>
       <ContainerDiv>
@@ -81,10 +96,6 @@ function Home() {
 }
 
 export default Home;
-
-export let emailNumb = "";
-
-export let emailGrab = "";
 
 const MainDiv = styled.div`
   display: flex;
@@ -153,7 +164,6 @@ const BigBox = styled(Box)`
 const SmallBox = styled(Box)`
   margin-top: 30px;
   width: 350px;
-  justify-content: space-between;
   align-items: center;
 `;
 

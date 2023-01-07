@@ -1,7 +1,10 @@
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
 import Header from "../Header";
+import { useHistory, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+
+let drinkArray = [];
+let itemID = 0;
 
 function Drinks() {
   let drinkValue = 450;
@@ -9,13 +12,13 @@ function Drinks() {
   const [drinks, setDrinks] = useState({});
 
   const history = useHistory();
+  const location = useLocation();
 
   let drinkCost = Array.from({ length: 25 }, () => (drinkValue += 50));
 
-  const clickHandle = (cost, name, setID) => {
+  const drinckClick = (cost, name, setID) => {
     drinkArray.push({ n: name, c: cost, id: itemID });
     itemID++;
-    //setDrinks({ n: name, c: cost, id: itemID });
     console.log(drinks);
     console.log(drinkArray);
     if (drinks[setID] === undefined) {
@@ -30,7 +33,15 @@ function Drinks() {
     if (drinkArray.length === 0) {
       return;
     }
-    history.push("/order");
+    history.push({
+      pathname: "/order",
+
+      dish: location.dishList,
+      emailNmb: location.emailNmb,
+      emailGrab: location.emailGrab,
+      drinks: drinkArray,
+      drinkID: itemID,
+    });
   };
 
   const [picture, setPicture] = useState();
@@ -58,7 +69,7 @@ function Drinks() {
                 key={item.id}
                 style={{ backgroundImage: `url(${item.image_url})` }}
                 onClick={() =>
-                  clickHandle(drinkCost[item.id - 1], item.name, item.id)
+                  drinckClick(drinkCost[item.id - 1], item.name, item.id)
                 }
               >
                 <p>{drinkCost[item.id - 1]}kr</p>
@@ -84,6 +95,7 @@ function Drinks() {
           )}
         </BigBox>
         <SmallBox>
+          <LargeTxt>Click to finish ordering</LargeTxt>
           <BoxButton onClick={() => handleClick()}>Next</BoxButton>
         </SmallBox>
       </ContainerDiv>
@@ -92,10 +104,6 @@ function Drinks() {
 }
 
 export default Drinks;
-
-export let drinkArray = [];
-
-export let itemID = 0;
 
 const MainDiv = styled.div`
   display: flex;
@@ -119,7 +127,6 @@ const BoxButton = styled.button`
   width: 300px;
   background-color: red;
   margin-bottom: 25px;
-  align-self: end;
   cursor: pointer;
 `;
 
@@ -143,10 +150,18 @@ const BigBox = styled(Box)`
 `;
 
 const SmallBox = styled(Box)`
+  flex-direction: column;
   height: 350px;
   width: 350px;
-  align-items: end;
+  justify-content: space-between;
   padding: 10px;
+`;
+
+const LargeTxt = styled.h1`
+  color: red;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-size: 40px;
 `;
 
 const CardDiv = styled.div`
@@ -157,7 +172,7 @@ const CardDiv = styled.div`
   width: 250px;
   margin: 10px;
   border: solid black 4px;
-  background-size: contain;c
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
