@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Header from "../Header";
 import { useHistory, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -19,8 +19,6 @@ function Drinks() {
   const drinckClick = (cost, name, setID) => {
     drinkArray.push({ n: name, c: cost, id: itemID });
     itemID++;
-    console.log(drinks);
-    console.log(drinkArray);
     if (drinks[setID] === undefined) {
       setDrinks({
         ...drinks,
@@ -31,7 +29,7 @@ function Drinks() {
 
   const handleClick = () => {
     if (drinkArray.length === 0) {
-      return;
+      return alert("Pick at least one drink");
     }
     history.push({
       pathname: "/order",
@@ -50,12 +48,15 @@ function Drinks() {
     const res = await fetch("https://api.punkapi.com/v2/beers");
     const body = await res.json();
     setPicture(body);
-    console.log(body);
   };
 
   useEffect(() => {
-    drinkArray = [];
-    image();
+    if (location.emailNmb === undefined) {
+      history.push("/");
+    } else {
+      drinkArray = [];
+      image();
+    }
   }, []);
 
   return (
@@ -128,6 +129,14 @@ const BoxButton = styled.button`
   background-color: red;
   margin-bottom: 25px;
   cursor: pointer;
+  border: solid black 3px;
+  &:hover {
+    background-color: #ea4b48;
+  }
+  &:active {
+    background-color: #e41f1b;
+    border: solid black 4px;
+  }
 `;
 
 const Box = styled.div`
@@ -176,6 +185,12 @@ const CardDiv = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  &:active {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const DrinkNames = styled.p`
@@ -185,8 +200,20 @@ const DrinkNames = styled.p`
   color: #fff;
 `;
 
+const FadeIn = keyframes`
+0% {opacity: 0;}
+10% {opacity: 0.1;}
+30% {opacity: 0.2; }
+40% {opacity: 0.5; }
+50% {opacity: 0.7; }
+70% {opacity: 0.8; }
+100% {opacity: 1; }
+`;
+
 const CheckMark = styled.path`
   height: 100px;
   width: 100px;
   color: green;
+  animation-name: ${FadeIn};
+  animation-duration: 0.5s;
 `;

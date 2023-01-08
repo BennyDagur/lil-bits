@@ -14,7 +14,6 @@ function Dish() {
   const image = async () => {
     const res = await fetch("https://themealdb.com/api/json/v1/1/random.php");
     const body = await res.json();
-    console.log(body);
     setPicture(body.meals[0]);
   };
 
@@ -35,10 +34,14 @@ function Dish() {
   };
 
   useEffect(() => {
-    if (location.emailNmb.length !== 0) {
-      setPicture(location.emailNmb["dishList"]);
+    if (location.emailNmb === undefined) {
+      history.push("/");
     } else {
-      image();
+      if (location.emailNmb.length !== 0) {
+        setPicture(location.emailNmb["dishList"]);
+      } else {
+        image();
+      }
     }
   }, []);
 
@@ -123,6 +126,14 @@ const BoxButton = styled.button`
   background-color: red;
   margin-bottom: 25px;
   cursor: pointer;
+  border: solid black 3px;
+  &:hover {
+    background-color: #ea4b48;
+  }
+  &:active {
+    background-color: #e41f1b;
+    border: solid black 4px;
+  }
 `;
 
 const OutButton = styled(BoxButton)`

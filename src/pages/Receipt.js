@@ -6,6 +6,10 @@ function Receipt() {
   const history = useHistory();
   const location = useLocation();
 
+  if (location.emailGrab === undefined) {
+    history.push("/");
+  }
+
   const handleClick = () =>
     history.push({
       pathname: "/",
@@ -23,8 +27,6 @@ function Receipt() {
   const overallDishPrice = location.dish.dishPrice * location.receiptCount;
 
   const overallPrice = overallDishPrice + sumWithInitial;
-
-  console.log(sumWithInitial);
   return (
     <MainDiv>
       <Header />
@@ -81,6 +83,14 @@ const BoxButton = styled.button`
   margin-bottom: 25px;
   cursor: pointer;
   align-self: end;
+  border: solid black 3px;
+  &:hover {
+    background-color: #ea4b48;
+  }
+  &:active {
+    background-color: #e41f1b;
+    border: solid black 4px;
+  }
 `;
 
 const Box = styled.div`

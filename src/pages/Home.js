@@ -4,7 +4,7 @@ import Carousel from "react-carousel-minimal/dist/components/Carousel";
 import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-let emailList = JSON.parse(localStorage.getItem("email") || "[]");
+let emailList = JSON.parse(localStorage.getItem("Emails") || "[]");
 
 let emailNumb = "";
 let emailGrab = "";
@@ -17,6 +17,8 @@ function Home() {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
+    console.log(emailList);
+    emailList = JSON.parse(localStorage.getItem("Emails") || "[]");
     emailNumb = "";
     emailGrab = "";
   }, []);
@@ -27,10 +29,10 @@ function Home() {
 
   const checkEmail = () => {
     for (let i = 0; i < emailList.length; i++) {
-      if (email in emailList[i]) {
+      if (email === emailList[i].email) {
         emailGrab = emailList[i];
         emailNumb = emailGrab[email];
-        console.log(emailGrab[email]);
+        console.log(emailGrab.email);
         history.push({
           pathname: "/dish",
 
@@ -130,6 +132,14 @@ const BoxButton = styled.button`
   background-color: red;
   margin-bottom: 25px;
   cursor: pointer;
+  border: solid black 3px;
+  &:hover {
+    background-color: #ea4b48;
+  }
+  &:active {
+    background-color: #e41f1b;
+    border: solid black 4px;
+  }
 `;
 
 const LButton = styled(BoxButton)`

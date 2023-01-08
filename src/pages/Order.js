@@ -4,8 +4,8 @@ import DateTimePicker from "react-datetime-picker";
 import { useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-let emailList = JSON.parse(localStorage.getItem("email") || "[]");
-let displayEmail = " ";
+let emailList = JSON.parse(localStorage.getItem("Emails") || "[]");
+let displayEmail = "";
 let receiptCount = "";
 
 function Order() {
@@ -33,15 +33,14 @@ function Order() {
     if (/\S+@\S+.\S+/.test(email)) {
       for (let i = 0; i < emailList.length; i++) {
         if (email in emailList[i]) {
-          emailList[i] = { [email]: { dishList, email: email } };
+          emailList[i] = { [email]: { dishList }, email: email };
           displayEmail = email;
           alert("Email Updated");
           localStorage.setItem("Emails", JSON.stringify(emailList));
-          console.log(emailList);
           return;
         }
       }
-      emailList.push({ [email]: { dishList, email: email } });
+      emailList.push({ [email]: { dishList }, email: email });
       displayEmail = email;
       alert("Email Submitted");
       localStorage.setItem("Emails", JSON.stringify(emailList));
@@ -61,13 +60,19 @@ function Order() {
     minute: "numeric",
   };
 
-  const toReceipt = () => {
-    if (
+  const checkTime = () => {
+    return (
       value.getDay() !== 0 &&
       value.getDay() !== 6 &&
       value.getHours() >= 16 &&
       value.getHours() < 23
-    ) {
+    );
+  };
+
+  const toReceipt = () => {
+    if (displayEmail.length === 0) {
+      alert("Invalid Email");
+    } else if (checkTime()) {
       receiptCount = count;
       let timeExport = value.toLocaleDateString("en-gb", options).toString();
       history.push({
@@ -86,20 +91,24 @@ function Order() {
   };
 
   useEffect(() => {
-    if (Object.values(location.emailGrab).length !== 0) {
-      console.log(location.emailGrab);
-      for (let i = 0; i < emailList.length; i++) {
-        if (location.emailGrab === emailList[i]) {
-          location.emailNumb["dishList"] = dishList;
-          emailList[i] = location.emailGrab;
-          displayEmail = location.emailNumb.email;
-          localStorage.setItem("Emails", JSON.stringify(emailList));
-
-          return;
+    if (location.emailNmb === undefined) {
+      history.push("/");
+    } else {
+      if (location.emailGrab.length !== 0) {
+        console.log(location.emailNmb);
+        for (let i = 0; i < emailList.length; i++) {
+          if (location.emailGrab.email === emailList[i].email) {
+            location.emailNmb["dishList"] = dishList;
+            emailList[i] = location.emailGrab;
+            displayEmail = location.emailGrab.email;
+            localStorage.setItem("Emails", JSON.stringify(emailList));
+            console.log("worked");
+            return;
+          }
         }
       }
+      displayEmail = "";
     }
-    displayEmail = "";
   }, []);
 
   return (
@@ -192,6 +201,14 @@ const BoxButton = styled.button`
   width: 300px;
   background-color: red;
   cursor: pointer;
+  border: solid black 3px;
+  &:hover {
+    background-color: #ea4b48;
+  }
+  &:active {
+    background-color: #e41f1b;
+    border: solid black 4px;
+  }
 `;
 
 const Box = styled.div`
